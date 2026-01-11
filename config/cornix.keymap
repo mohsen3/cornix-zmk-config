@@ -4,53 +4,18 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "zmk-helpers/helper.h"
-#include "includes/cornix54.h"
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 
-#define BASE 0
-#define NAV 1
-#define NUM 2
-#define FUN 3
-#define SYM 4
-#define MOUSE 5
-
-#define ___ &trans
-
-#define UMDO LG(Z)
-#define REDO LG(LS(Z))
-#define MEH LC(LS(LALT))
-
-#define PLAY C_PP
-#define NEXT C_NEXT
-#define PREV C_PREV
-#define VOL_DN C_VOL_DN
-#define VOL_UP C_VOL_UP
-#define KAST KP_ASTERISK
-#define KPSL KP_SLASH
-#define MDASH LS(LA(MINUS))
-
-#define NXTB F17 // next tab
-#define PVTB F16 // prev tab
-#define FWD LA(F17) // forward
-#define BCK LA(F16) // back
-
-/* Homerow Mods */
-
-#define KEYS_L LT0 LT1 LT2 LT3 LT4 LT5 LM0 LM1 LM2 LM3 LM4 LM5 LB0 LB1 LB2 LB3 LB4 LB5  // left hand
-#define KEYS_R RT0 RT1 RT2 RT3 RT4 RT5 RM0 RM1 RM2 RM3 RM4 RM5 RB0 RB1 RB2 RB3 RB4 RB5  // right hand
-#define THUMBS LH2 LH1 LH0 RH0 RH1 RH2
-
-#define MAKE_HRM(NAME, HOLD, TAP, TRIGGER_POS)                                 \
-     ZMK_HOLD_TAP(NAME, bindings = <HOLD>, <TAP>; flavor = "balanced";         \
-               tapping-term-ms = <211>;                                        \
-               require-prior-idle-ms = <80>; hold-trigger-on-release;          \
-               hold-trigger-key-positions = <TRIGGER_POS>;)
-
-MAKE_HRM(hml, &kp, &kp, KEYS_R THUMBS) // Left-hand HRMs.
-MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
+/* Editor-friendly notes:
+ * - Layer ids: BASE=0, NAV=1, NUM=2, FUN=3, SYM=4, MOUSE=5.
+ * - Aliases expanded inline: ___=&trans, PLAY=C_PP, NEXT=C_NEXT, PREV=C_PREV,
+ *   VOL_DN=C_VOL_DN, VOL_UP=C_VOL_UP, KAST=KP_ASTERISK, KPSL=KP_SLASH,
+ *   MDASH=LS(LA(MINUS)), NXTB=F17, PVTB=F16, FWD=LA(F17), BCK=LA(F16),
+ *   UMDO=LG(Z), REDO=LG(LS(Z)), MEH=LC(LS(LALT)).
+ * - Homerow mods: custom &hml/&hmr replaced with standard &mt for editor support.
+ */
 
 #include "includes/combos.dtsi"
 #include "includes/mouse.dtsi"
@@ -65,11 +30,11 @@ MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
 // ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮                               ╭──────────────┬──────────────┬──────────────┬──────────────┬────────────────┬──────────────╮
      &kp ESC        &kp Q          &kp W          &kp E          &kp R          &kp T                                          &kp Y          &kp U          &kp I          &kp O          &kp P            &kp BSLH   
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤                               ├──────────────┼──────────────┼──────────────┼──────────────┼────────────────┼──────────────┤
-     &kp TAB        &hml LSHFT A   &hml LCTRL S   &hml LALT D    &hml LGUI F    &lt NUM G                                      &kp H          &hmr RGUI J    &hmr RALT K    &hmr RCTRL L   &hmr RSHFT SEMI  &kp SQT   
+     &kp TAB        &mt LSHFT A    &mt LCTRL S    &mt LALT D     &mt LGUI F     &lt 2 G /* editor: NUM layer */                 &kp H          &mt RGUI J     &mt RALT K     &mt RCTRL L    &mt RSHFT SEMI   &kp SQT   
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤──────────────╮ ╭──────────────├──────────────┼──────────────┼──────────────┼──────────────┼────────────────┼──────────────┤
-     &hml MEH RET   &lt SYM Z      &kp X          &kp C          &lt MOUSE V    &kp B          &kp C_MUTE       &none          &kp N          &kp M          &kp COMMA      &kp DOT        &lt SYM MINUS    &hmr MEH SLASH
+     &mt LC(LS(LALT)) RET /* editor: was MEH */ &lt 4 Z      &kp X          &kp C          &lt 5 V        &kp B          &kp C_MUTE       &none          &kp N          &kp M          &kp COMMA      &kp DOT        &lt 4 MINUS      &mt LC(LS(LALT)) SLASH /* editor: was MEH */
 // ╰──────────────┴──────────────┴──────────────┴──────────────┼──────────────┼──────────────┤──────────────╯ ╰──────────────├──────────────┼──────────────┼──────────────┼──────────────┼────────────────┼──────────────╯
-     &hml MEH RET   &none          &none          &kp LGUI       &mo NAV        &kp SPACE                                      &kp BKSP       &mo NUM        &lt FUN TAB    &none          &none            &tog MOUSE
+     &mt LC(LS(LALT)) RET /* editor: was MEH */ &none          &none          &kp LGUI       &mo 1 /* editor: NAV layer */     &kp SPACE                                      &kp BKSP       &mo 2 /* editor: NUM layer */ &lt 3 TAB     &none          &none            &tog 5 /* editor: MOUSE layer */
 // ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯                               ╰──────────────┴──────────────┴──────────────┴──────────────┴────────────────┴──────────────╯ 
          >;
          sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_DN PG_UP>;
@@ -80,13 +45,13 @@ MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
          display-name = "NAV";
          bindings = <
 // ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮                               ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮
-     ___            ___            &kp BCK        &kp VOL_UP     &kp FWD        ___                                            &kp LC(LEFT)   &kp LA(LEFT)   &kp UP         &kp LA(RIGHT)  &kp LC(RIGHT)  &kp DEL
+     &trans         &trans         &kp LA(F16)    &kp C_VOL_UP   &kp LA(F17)    &trans                                         &kp LC(LEFT)   &kp LA(LEFT)   &kp UP         &kp LA(RIGHT)  &kp LC(RIGHT)  &kp DEL
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤                               ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            &kp PREV       &kp VOL_DN     &kp NEXT       &kp REDO                                       &kp PG_UP      &kp LEFT       &kp DOWN       &kp RIGHT      ___            &kp LG(BKSP)
+     &trans         &trans         &kp C_PREV     &kp C_VOL_DN   &kp C_NEXT     &kp LG(LS(Z))                                  &kp PG_UP      &kp LEFT       &kp DOWN       &kp RIGHT      &trans         &kp LG(BKSP)
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤──────────────╮ ╭──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            &kp PVTB       &kp PLAY       &kp NXTB       &kp UMDO       ___              ___            &kp PG_DN      ___            ___            ___            ___            ___   
+     &trans         &trans         &kp F16        &kp C_PP       &kp F17        &kp LG(Z)     &trans           &trans          &kp PG_DN      &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┼──────────────┼──────────────┤──────────────╯ ╰──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────╯
-     ___            ___            ___            ___            ___            ___                                            ___            ___            ___            ___            ___            ___
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &trans         &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯                               ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯
          >;
       };
@@ -95,13 +60,13 @@ MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
          display-name = "NUM";
          bindings = <
 // ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮                               ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮
-     ___            ___            ___            ___            ___            ___                                            &kp KAST       &kp N7         &kp N8         &kp N9         &kp KP_PLUS    ___   
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &kp KP_ASTERISK &kp N7         &kp N8         &kp N9         &kp KP_PLUS    &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤                               ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            ___            ___            ___            ___                                            &kp KPSL       &kp N4         &kp N5         &kp N6         &kp KP_MINUS   &kp KP_N0
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &kp KP_SLASH   &kp N4         &kp N5         &kp N6         &kp KP_MINUS   &kp KP_N0
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤──────────────╮ ╭──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            ___            ___            ___            ___            ___              ___            &kp CMMA       &kp N1         &kp N2         &kp N3         &kp KP_DOT     &kp COLON
+     &trans         &trans         &trans         &trans         &trans         &trans         &trans           &trans          &kp CMMA       &kp N1         &kp N2         &kp N3         &kp KP_DOT     &kp COLON
 // ╰──────────────┴──────────────┴──────────────┴──────────────┼──────────────┼──────────────┤──────────────╯ ╰──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────╯
-     ___            ___            ___            ___            ___            ___                                            ___            ___            ___            ___            ___            ___
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &trans         &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯                               ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯
          >;
       };
@@ -111,13 +76,13 @@ MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
          display-name = "FUN";
          bindings = <
 // ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮                               ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮
-     &bt BT_CLR     &kp F11        &kp F12        &kp F13        &kp F14        &kp F15                                        ___            ___            ___            ___            ___            ___   
+     &bt BT_CLR     &kp F11        &kp F12        &kp F13        &kp F14        &kp F15                                        &trans         &trans         &trans         &trans         &trans         &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤                               ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     &bt BT_SEL 0   &kp F6         &kp F7         &kp F8         &kp F9         &kp F10                                        ___            ___            ___            ___            ___            ___   
+     &bt BT_SEL 0   &kp F6         &kp F7         &kp F8         &kp F9         &kp F10                                        &trans         &trans         &trans         &trans         &trans         &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤──────────────╮ ╭──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     &bt BT_SEL 1   &kp F1         &kp F2         &kp F3         &kp F4         &kp F5         ___              ___            ___            ___            ___            ___            ___            ___   
+     &bt BT_SEL 1   &kp F1         &kp F2         &kp F3         &kp F4         &kp F5         &trans           &trans          &trans         &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┼──────────────┼──────────────┤──────────────╯ ╰──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────╯
-     ___            ___            ___            ___            ___            ___                                            ___            ___            ___            ___            ___            ___
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &trans         &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯                               ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯
          >;
       };
@@ -126,13 +91,13 @@ MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
          display-name = "SYM";
          bindings = <
 // ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮                               ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮
-     ___            &kp EXCL       &kp AT         &kp HASH       &kp DLLR       &kp PRCNT                                      &kp CARET      &kp AMPS       &kp STAR       &kp GRAVE      &kp TILDE      ___   
+     &trans         &kp EXCL       &kp AT         &kp HASH       &kp DLLR       &kp PRCNT                                      &kp CARET      &kp AMPS       &kp STAR       &kp GRAVE      &kp TILDE      &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤                               ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            &kp LA(SEMI)   &kp LBKT       &kp RBKT       &kp LBRC       &kp RBRC                                       &kp LPAR       &kp RPAR       &kp SQT        &kp DQT        &kp MDASH      ___   
+     &trans         &kp LA(SEMI)   &kp LBKT       &kp RBKT       &kp LBRC       &kp RBRC                                       &kp LPAR       &kp RPAR       &kp SQT        &kp DQT        &kp LS(LA(MINUS)) &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤──────────────╮ ╭──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            &kp BSLH       &kp PIPE       &kp UNDER      &kp MINUS      ___              ___            &kp EQUAL      &kp PLUS       &kp SLASH      &kp QMARK      ___            ___   
+     &trans         &trans         &kp BSLH       &kp PIPE       &kp UNDER      &kp MINUS      &trans           &trans          &kp EQUAL      &kp PLUS       &kp SLASH      &kp QMARK      &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┼──────────────┼──────────────┤──────────────╯ ╰──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────╯
-     ___            ___            ___            ___            ___            ___                                            ___            ___            ___            ___            ___            ___
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &trans         &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯                               ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯
          >;
       };
@@ -142,13 +107,13 @@ MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
          display-name = "MOUSE";
          bindings = <
 // ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮                               ╭──────────────┬──────────────┬──────────────┬──────────────┬──────────────┬──────────────╮
-     ___            ___            ___            ___            ___            ___                                            U_WH_U         U_WH_L         U_MS_U         U_WH_R         ___            ___   
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &msc SCRL_DOWN &msc SCRL_LEFT &mmv MOVE_UP   &msc SCRL_RIGHT &trans         &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤                               ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            ___            ___            ___            ___                                            U_WH_D         U_MS_L         U_MS_D         U_MS_R         ___            ___   
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &msc SCRL_UP   &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_RIGHT &trans         &trans
 // ├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤──────────────╮ ╭──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
-     ___            ___            ___            ___            ___            ___            ___              ___            ___            ___            ___            ___            ___            ___   
+     &trans         &trans         &trans         &trans         &trans         &trans         &trans           &trans          &trans         &trans         &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┼──────────────┼──────────────┤──────────────╯ ╰──────────────├──────────────┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────╯
-     ___            ___            ___            ___            ___            ___                                            &mkp LCLK      &mkp RCLK      ___            ___            ___            ___
+     &trans         &trans         &trans         &trans         &trans         &trans                                         &mkp LCLK      &mkp RCLK      &trans         &trans         &trans         &trans
 // ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯                               ╰──────────────┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────╯ 
          >;
       };
