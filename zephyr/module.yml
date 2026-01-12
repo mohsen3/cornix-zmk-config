@@ -1,3 +1,6 @@
+---
+name: cornix-zmk-config
 build:
   settings:
     board_root: .
+    snippet_root: .
