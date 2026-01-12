@@ -1,0 +1,18 @@
+#define MAKE_HRM(NAME, HOLD, TAP, TRIGGER_POS)                                 \
+     ZMK_HOLD_TAP(NAME, bindings = <HOLD>, <TAP>; flavor = "balanced";         \
+               tapping-term-ms = <211>;                                        \
+               require-prior-idle-ms = <80>; hold-trigger-on-release;          \
+               hold-trigger-key-positions = <TRIGGER_POS>;)
+
+MAKE_HRM(hml, &kp, &kp, KEYS_R THUMBS) // Left-hand HRMs.
+MAKE_HRM(hmr, &kp, &kp, KEYS_L THUMBS) // Right-hand HRMs.
+
+#define HRM_A &hml LSHFT A
+#define HRM_S &hml LCTRL S
+#define HRM_D &hml LALT D
+#define HRM_F &hml LGUI F
+
+#define HRM_J &hmr RGUI J
+#define HRM_K &hmr RALT K
+#define HRM_L &hmr RCTRL L
+#define HRM_SCLN &hmr RSHFT SEMI

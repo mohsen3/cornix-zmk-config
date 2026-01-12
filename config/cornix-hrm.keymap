@@ -1,0 +1,352 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include "zmk-helpers/helper.h"
+#include "includes/cornix54.h"
+
+// tap windows for ctl alt and gui
+
+#define HM_TAPPING_TERM 250
+#define HM_TAPPING_REPEAT 210
+
+// quick tapping for shift
+
+#define HM_TAPPING_TERM_FAST 200
+#define HM_PRIOR_IDLE 70
+#define BASE 0
+#define WIN 1
+#define LOWER 2
+#define RAISE 3
+#define ADJUST 4
+#define NAVI   5
+#define NUM    6
+#define DEBUG  7
+#define APPS   8
+#define SELECTION 9
+
+// https://github.com/urob/zmk-config/tree/main#timeless-homerow-mods
+
+#define KEYS_L LT0 LT1 LT2 LT3 LT4 LT5 LM0 LM1 LM2 LM3 LM4 LM5 LB0 LB1 LB2 LB3 LB4 LB5  // left hand
+#define KEYS_R RT0 RT1 RT2 RT3 RT4 RT5 RM0 RM1 RM2 RM3 RM4 RM5 RB0 RB1 RB2 RB3 RB4 RB5  // right hand
+#define THUMBS LH1 LH0 RH0 RH1
+#define KEYS_T LH1 LH0 RH0 RH1
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 18
+#include "includes/hrm.dtsi"
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
+
+/ {
+    // Activate ADJUST layer by pressing raise and lower
+
+    behaviors {
+        // Positional Homerow mods for shift
+        // Use faster tapping term and disable some features that may
+        // cause false negatives.
+        /*
+         * Non-Positional Homerow Mods
+         * Used for &mm_grescm_gui behavior on left hand.
+         *
+         * Usage: &hm LSHFT T
+         * Tap: T
+         * Tap-Tap-Hold: Repeat T
+         * Hold: LSHIFT
+         */
+
+        scroll_encoder: scroll_encoder {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
+
+            tap-ms = <20>;
+        };
+    };
+
+    macros {
+        select_line: select_line {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp LCTRL>,
+                <&macro_tap>,
+                <&kp A>,
+                <&macro_release>,
+                <&kp LCTRL>,
+                <&macro_press>,
+                <&kp LCTRL &kp LSHFT>,
+                <&macro_tap>,
+                <&kp E>,
+                <&macro_release>,
+                <&kp LCTRL &kp LSHFT>;
+        };
+
+        select_paragraph: select_paragraph {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp LCTRL>,
+                <&macro_tap>,
+                <&kp A>,
+                <&macro_release>,
+                <&kp LCTRL>,
+                <&macro_press>,
+                <&kp LSHFT>,
+                <&macro_tap>,
+                <&kp DOWN>,
+                <&macro_tap>,
+                <&kp DOWN>,
+                <&macro_tap>,
+                <&kp DOWN>,
+                <&macro_release>,
+                <&kp LSHFT>;
+        };
+    };
+
+    conditional_layers { compatible = "zmk,conditional-layers"; };
+
+    combos {
+        compatible = "zmk,combos";
+
+        cb_enter {
+            bindings = <&kp RET>;
+            key-positions = <21 19>;
+            layers = <0>;
+            timeout-ms = <50>;
+        };
+
+        cb_backspace {
+            bindings = <&kp BACKSPACE>;
+            key-positions = <16 15>;
+            timeout-ms = <50>;
+        };
+
+        cb_backword {
+            bindings = <&kp LA(BACKSPACE)>;
+            key-positions = <15 14>;
+            timeout-ms = <50>;
+        };
+
+        cb_delete {
+            bindings = <&kp DELETE>;
+            key-positions = <14 16>;
+            timeout-ms = <50>;
+        };
+
+        cb_minus {
+            bindings = <&kp MINUS>;
+            key-positions = <18 19>;
+            timeout-ms = <50>;
+        };
+
+        cp_underscore {
+            bindings = <&kp UNDERSCORE>;
+            key-positions = <32 33>;
+            timeout-ms = <50>;
+        };
+
+        cb_cut {
+            bindings = <&kp LG(X)>;
+            key-positions = <25 26>;
+            timeout-ms = <50>;
+        };
+
+        cb_copy {
+            bindings = <&kp LG(C)>;
+            key-positions = <26 27>;
+            timeout-ms = <50>;
+        };
+
+        cb_paste {
+            bindings = <&kp LG(V)>;
+            key-positions = <27 28>;
+            timeout-ms = <50>;
+        };
+
+        cb_paste_list {
+            bindings = <&kp LS(LG(V))>;
+            key-positions = <28 29>;
+            timeout-ms = <50>;
+        };
+
+        cb_cmd_w {
+            bindings = <&kp LG(W)>;
+            key-positions = <1 2>;
+            timeout-ms = <50>;
+            require-prior-idle-ms = <300>;
+        };
+
+        cb_cmd_a {
+            bindings = <&kp LG(A)>;
+            key-positions = <13 16>;
+            timeout-ms = <50>;
+        };
+
+        cb_mouse_left_click_2 {
+            bindings = <&mkp MB1>;
+            key-positions = <16 17>;
+            timeout-ms = <50>;
+        };
+
+        cb_cmd_t {
+            bindings = <&kp LG(T)>;
+            key-positions = <5 4>;
+            timeout-ms = <50>;
+            require-prior-idle-ms = <900>;
+        };
+
+        cb_caps_word {
+            bindings = <&caps_word>;
+            key-positions = <16 19>;
+            timeout-ms = <50>;
+        };
+
+        cb_bt_0 {
+            bindings = <&bt BT_SEL 0>;
+            key-positions = <24 12>;
+            require-prior-idle-ms = <1000>;
+            timeout-ms = <50>;
+        };
+
+        cb_bt_1 {
+            bindings = <&bt BT_SEL 1>;
+            key-positions = <38 24>;
+            require-prior-idle-ms = <1000>;
+            timeout-ms = <50>;
+        };
+
+        cb_grave {
+            bindings = <&kp GRAVE>;
+            key-positions = <0 1>;
+            timeout-ms = <50>;
+            require-prior-idle-ms = <300>;
+        };
+
+        cb_undo {
+            bindings = <&kp LG(Z)>;
+            key-positions = <25 28>;
+            timeout-ms = <50>;
+        };
+
+        cb_delete_word {
+            bindings = <&kp LA(DELETE)>;
+            key-positions = <16 15 14>;
+            timeout-ms = <50>;
+        };
+
+        cb_mouse_left_click {
+            bindings = <&mkp LCLK>;
+            key-positions = <6 7>;
+            require-prior-idle-ms = <500>;
+            timeout-ms = <50>;
+        };
+
+        cb_mouse_middle_click {
+            bindings = <&mkp MCLK>;
+            key-positions = <6 8>;
+            require-prior-idle-ms = <500>;
+            timeout-ms = <50>;
+        };
+
+        cb_bluetooth_clear_profiles {
+            bindings = <&bt BT_CLR_ALL>;
+            key-positions = <11 23 37 49>;
+            require-prior-idle-ms = <1000>;
+            timeout-ms = <50>;
+        };
+
+        cb_screenshot {
+            bindings = <&kp LS(LC(LG(NUMBER_4)))>;
+            key-positions = <5 4 3>;
+            require-prior-idle-ms = <300>;
+        };
+
+        cb_control_r_reverse_search {
+            bindings = <&kp LC(R)>;
+            key-positions = <4 3>;
+            require-prior-idle-ms = <900>;
+        };
+
+        cb_left_enter {
+            bindings = <&kp ENTER>;
+            key-positions = <2 3 4>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            display-name = "Base";
+
+            // ------------------------------------------------------------------------------------------------------------
+            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |       |
+            // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BKSPC |
+            // |  TAB  |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
+            // | SHIFT |  Z  |  X  |  C   |  V   |  B   |  MUTE  |  |       |  N   |  M    |  ,    |  .   |   /   | SHIFT |
+            //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
+
+            bindings = <
+&kp ESCAPE        &kp Q         &kp W         &kp E  &kp R  &kp T                    &kp Y            &kp U  &kp I      &kp O           &kp P         &kp BACKSPACE
+&kp TAB           HRM_A         HRM_S         HRM_D        HRM_F        &kp G          &kp H            HRM_J        HRM_K        HRM_L           HRM_SCLN        &kp SINGLE_QUOTE
+&kp LEFT_SHIFT    &kp Z         &kp X         &kp C  &kp V  &kp B      &none  &none  &kp N            &kp M  &kp COMMA  &kp DOT         &kp SLASH     &mt RIGHT_SHIFT BACKSLASH
+&kp LEFT_CONTROL  &kp LEFT_ALT  &kp LEFT_GUI  &mo 3  &mo 2  &kp SPACE                &sk RIGHT_SHIFT  &mo 1  &mo 4      &kp DOWN_ARROW  &kp UP_ARROW  &kp ENTER
+            >;
+
+            sensor-bindings = <&scroll_encoder &inc_dec_kp PG_UP PG_DN>;
+        };
+
+        Navi_layer {
+            display-name = "Navi";
+            bindings = <
+&kp GRAVE  &none  &none           &mmv MOVE_UP    &kp PAGE_UP      &kp PAGE_DOWN                   &mkp MB1                        &mkp MB3        &mkp MB2            &msc SCRL_UP         &msc SCRL_DOWN   &kp RS(RA(RC(RG(A))))
+&trans     &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &msc SCRL_UP                    &kp RS(RA(RC(RG(ENTER))))       &kp LEFT_ARROW  &kp DOWN_ARROW      &kp UP_ARROW         &kp RIGHT_ARROW  &kp RG(RC(RA(RS(B))))
+&trans     &none  &none           &none           &none            &msc SCRL_DOWN  &trans  &trans  &kp RS(RA(RC(RG(LEFT_ARROW))))  &kp RC(A)       &kp RA(LEFT_ARROW)  &kp RA(RIGHT_ARROW)  &kp RC(E)        &kp RG(RC(RA(RS(C))))
+&trans     &none  &none           &trans          &trans           &trans                          &trans                          &trans          &trans              &kp PAGE_DOWN        &kp PAGE_UP      &kp RG(RC(RA(RS(D))))
+            >;
+
+            sensor-bindings = <&scroll_encoder &inc_dec_kp PG_UP PG_DN>;
+        };
+
+        Num {
+            bindings = <
+&kp MINUS  &kp N1     &kp N2          &kp N3     &kp N4     &kp N5                   &kp LS(CARET)   &kp LS(AMPS)     &kp LS(STAR)   &kp LS(LPAR)  &kp LS(RPAR)      &trans
+&kp PLUS   &kp N6     &kp N7          &kp N8     &kp N9     &kp N0                   &kp LS(EXCL)    &kp LS(AT)       &kp LS(POUND)  &kp LS(DLLR)  &kp LS(PRCNT)     &trans
+&kp FSLH   &kp EQUAL  &kp UNDERSCORE  &kp GRAVE  &kp COMMA  &kp DOT  &trans  &trans  &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp LBKT       &kp RBKT      &kp QUESTION      &trans
+&kp STAR   &trans     &trans          &trans     &trans     &trans                   &trans          &trans           &trans         &kp RG(DOWN)  &kp RG(UP_ARROW)  &trans
+            >;
+
+            sensor-bindings = <&scroll_encoder &inc_dec_kp PG_UP PG_DN>;
+        };
+
+        Apps_layer {
+            display-name = "Apps";
+            bindings = <
+&trans       &kp LG(NUMBER_1)       &kp LG(NUMBER_2)       &kp LG(F)              &kp LG(R)              &kp LG(T)                              &kp RG(NUMBER_9)       &kp RS(RA(RC(RG(J))))  &kp RS(RA(RC(RG(K))))   &kp RG(O)             &kp RG(P)            &kp RG(RC(RA(RS(L))))
+&kp LG(TAB)  &kp LS(LA(LC(LG(E))))  &kp LS(LA(LC(LG(F))))  &kp LS(LA(LC(LG(G))))  &kp LS(LA(LC(LG(H))))  &kp LS(LA(LC(LG(I))))                  &kp RG(LEFT_BRACKET)   &kp LG(LEFT_BRACE)     &kp RG(K)               &kp RG(L)             &kp LG(RIGHT_BRACE)  &kp RG(RIGHT_BRACKET)
+&trans       &kp LG(Z)              &kp LG(X)              &kp LG(C)              &kp LG(V)              &kp LG(B)              &trans  &trans  &kp RS(RA(RC(RG(M))))  &kp RA(RG(LEFT))       &kp LG(LA(DOWN_ARROW))  &kp LG(LA(UP_ARROW))  &kp RA(RG(RIGHT))    &trans
+&trans       &trans                 &trans                 &trans                 &trans                 &kp LG(SPACE)                          &trans                 &trans                 &trans                  &trans                &trans               &kp RG(RS(ENTER))
+            >;
+
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
+        };
+
+        Selection_layer {
+            display-name = "Select";
+            bindings = <
+&trans  &trans     &trans             &trans        &kp LS(LG(UP_ARROW))  &kp LS(LG(DOWN_ARROW))                  &kp LG(Y)  &trans              &trans                  &trans                   &trans               &trans
+&trans  &kp LG(A)  &select_paragraph  &select_line  &kp LG(F)             &trans                                  &trans     &kp LS(LEFT_ARROW)  &kp LS(DOWN_ARROW)      &kp LS(UP_ARROW)         &kp LS(RIGHT_ARROW)  &trans
+&trans  &kp LG(Z)  &kp LG(X)          &kp LG(C)     &kp LG(V)             &trans                  &trans  &trans  &trans     &kp RS(RC(A))       &kp RS(RA(LEFT_ARROW))  &kp RS(RA(RIGHT_ARROW))  &kp RS(RC(E))        &trans
+&trans  &trans     &trans             &trans        &trans                &trans                                  &trans     &trans              &trans                  &kp LS(PAGE_DOWN)        &kp LS(PAGE_UP)      &trans
+            >;
+
+            sensor-bindings = <&scroll_encoder &inc_dec_kp PG_UP PG_DN>;
+        };
+    };
+};
