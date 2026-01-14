@@ -16,7 +16,7 @@ manifest:
     - name: zmk
       remote: zmkfirmware
       revision: e34793e
-      clone-depth: 1
+      clone-depth: 0
       import:
         file: app/west.yml
     - name: zmk-helpers
